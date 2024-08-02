@@ -30,7 +30,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        downloadWhitelistBase(this)
+        CoroutineScope(Dispatchers.IO).launch {
+            downloadWhitelistBase()
+        }
+
         setContent {
             ListaBlancaBaseTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -43,9 +46,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun downloadWhitelistBase(context: Context) {
+    private fun downloadWhitelistBase() {
         val url = URL("https://5khbta9jbk.execute-api.us-west-2.amazonaws.com/base_wl")
-        val outputFile = File(context.filesDir, "whitelist_temp.txt") // Usar context.filesDir
+        val outputFile = File(filesDir, "whitelist_temp.txt") // Usar context.filesDir
 
         try {
             val connection = url.openConnection() as HttpURLConnection
